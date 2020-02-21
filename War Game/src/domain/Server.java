@@ -87,8 +87,8 @@ public class Server {
 		outs.add(outputStreams.get(firstClientIndex));
 		outs.add(outputStreams.get(secondClientIndex));
 
-		ServerThread serverThread = new ServerThread(gameID, clientCounter, sockets, inputs, outs);
-		serverThread.start();
+		GameThread gameThread = new GameThread(gameID, clientCounter, sockets, inputs, outs);
+		gameThread.start();
 	}
 
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 
-public class ServerThread extends Thread {
+public class GameThread extends Thread {
 
 	private ArrayList<Socket> clientSockets;
 	protected ArrayList<BufferedReader> inputStreams;
@@ -18,7 +18,7 @@ public class ServerThread extends Thread {
 	private int GAME_ID;
 	private int lastClientID;
 
-	public ServerThread(int gameID, int clientCounter, ArrayList<Socket> clientSockets,
+	public GameThread(int gameID, int clientCounter, ArrayList<Socket> clientSockets,
 			ArrayList<BufferedReader> inputStreams, ArrayList<PrintWriter> outputStreams) {
 		this.inputStreams = inputStreams;
 		this.outputStreams = outputStreams;
