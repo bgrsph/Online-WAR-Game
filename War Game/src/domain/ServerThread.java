@@ -7,87 +7,71 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-//TODO: Cite the code taken from PS
 
 public class ServerThread extends Thread {
-	
+
 	private ArrayList<Socket> clientSockets;
-    protected ArrayList<BufferedReader> inputStreams;
-    protected ArrayList<PrintWriter> outputStreams;
-    private String fullMessageFromClient = new String();
-    String actionCodeFromClient = new String();
-    private int NUMBER_OF_PLAYERS;
-	
-	public ServerThread(ArrayList<Socket> clientSockets) {
-		inputStreams = new ArrayList<BufferedReader>();
-		outputStreams = new ArrayList<PrintWriter>();
+	protected ArrayList<BufferedReader> inputStreams;
+	protected ArrayList<PrintWriter> outputStreams;
+	private String fullMessageFromClient = new String();
+	private int NUMBER_OF_PLAYERS;
+	private int GAME_ID;
+	private int lastClientID;
+
+	public ServerThread(int gameID, int clientCounter, ArrayList<Socket> clientSockets,
+			ArrayList<BufferedReader> inputStreams, ArrayList<PrintWriter> outputStreams) {
+		this.inputStreams = inputStreams;
+		this.outputStreams = outputStreams;
 		this.clientSockets = clientSockets;
 		this.NUMBER_OF_PLAYERS = clientSockets.size();
-		
+		this.GAME_ID = gameID;
+		this.lastClientID = clientCounter;
+
+		System.out.println("[GAME CONTROLLER " + this.GAME_ID + "] Game started.");
 	}
-	
-	
+
 	public void communicateWithClients() throws IOException {
-		
+
 		BufferedReader inputStream;
 		PrintWriter outputStream;
 		String fullMessageFromClient;
-		
-		for(int i = 0; i < this.NUMBER_OF_PLAYERS; i++) {
-			
+		int clientID;
+
+		for (int i = 0; i < this.NUMBER_OF_PLAYERS; i++) {
+
 			inputStream = inputStreams.get(i);
 			outputStream = outputStreams.get(i);
-		
-			outputStream.println("Your Turn Client " + i);
-			
-			while(true) {
-				
+			clientID = (this.lastClientID - 1) + i;
+			outputStream.println("[GAME CONTROLLER " + this.GAME_ID + "] Hello Client " + clientID);
+			outputStream.flush();
+
+			while (true) {
+
 				fullMessageFromClient = inputStream.readLine();
-				
 				if (fullMessageFromClient != null) {
-					System.out.println("New Message From Client: " + fullMessageFromClient);
-					break;
-				}		
+
+					System.out.println("[GAME CONTROLLER " + this.GAME_ID + "] New Message from Client " + clientID
+							+ " : " + fullMessageFromClient);
+
+					if (fullMessageFromClient.equals("I know.")) {
+
+						break;
+					}
+
+				}
 			}
 
 		}
-		
-		
-		
-		
+
 	}
 
-	
 	public void run() {
-		
-        try
-        {
 
-        }
-        catch (IOException e)
-        {
-            System.err.println("Server Thread. Run. IO error in server thread");
-        }
-        
-        try
-        {
-        	fullMessageFromClient = bufferedReader.readLine();
-        	
+		try {
+			communicateWithClients();
+		} catch (IOException e) {
+			System.err.println("ServerThread.run: Communication with clients has failed");
+		}
 
-        	while(!fullMessageFromClient.equals("EXIT")) {
-        		
-        		// Decode the message in here!
-
-        		System.out.println("New Message from Client ?: " + fullMessageFromClient);
-        		
-        		
-        		
-        	}
-        } catch(IOException e) {
-        	
-        }
-
-		
-		
 	}
 }
