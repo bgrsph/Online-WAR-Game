@@ -29,6 +29,8 @@ public class GameThread extends Thread {
 
 	private ArrayList<Socket> clientSockets;
 	private int lastClientID;
+	
+	private ArrayList<String> clientNames;
 
 	/**
 	 * Work description of a thread. Starts to execute its content when
@@ -40,6 +42,7 @@ public class GameThread extends Thread {
 			if (FIRST_TIME) {
 
 				waitForClients();
+				System.out.println("CLIENTS: " + this.clientNames.toString());
 				startGame();
 				FIRST_TIME = false;
 
@@ -84,6 +87,7 @@ public class GameThread extends Thread {
 		this.inputStreams = inputStreams;
 		this.outputStreams = outputStreams;
 		this.clientSockets = clientSockets;
+		clientNames = new ArrayList<String>();
 		GAME_ID = gameID;
 		this.lastClientID = clientCounter;
 		System.out.println("[GAME CONTROLLER " + this.GAME_ID + "] Game started.");
@@ -131,9 +135,10 @@ public class GameThread extends Thread {
 			while (numOfClientsReady != NUMBER_OF_PLAYERS) {
 				fullMessageFromClient = inputStream.readLine();
 				if (fullMessageFromClient != null) {
-					if (fullMessageFromClient.equals("wantgame")) {
+					if (fullMessageFromClient.contains("wantgame")) {
 						System.out.println("[GAME CONTROLLER] Client " + clientID + " is ready.");
 						numOfClientsReady++;
+						clientNames.add(i, new ArrayList<String>(Arrays.asList(fullMessageFromClient.split("-"))).get(1));
 						break;
 					}
 

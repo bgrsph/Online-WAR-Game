@@ -73,6 +73,7 @@ public class Client extends Thread {
 			inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			outputStream = new PrintWriter(socket.getOutputStream());
 			System.out.println("Successfully connected to " + this.serverIP + " on port " + this.serverPort);
+			
 		} catch (IOException e) {
 			System.err.println("Error: no server has been found on " + this.serverIP + "/" + serverPort);
 		}
@@ -248,7 +249,7 @@ public class Client extends Thread {
 		if (IS_FIRST_TIME) {
 			int userRequest = parseOptions("initial", null);
 			if (userRequest == 1) {
-				sendMessageToGameController("wantgame");
+				sendMessageToGameController("wantgame-" + this.name);
 			} else {
 				System.out.println("Disconnecting...");
 				System.exit(0);
