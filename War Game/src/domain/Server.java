@@ -1,5 +1,11 @@
 package domain;
 
+/** Represents a server that waits clients to start the game, followers to connect and updates database.
+ * @author Buğra Sipahioğlu
+ * @author Melike Kavcıoğlu
+ * @author Tanıl ?
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,19 +14,24 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
 public class Server {
 
-	public static final int NUM_OF_PLAYERS = 2;
-	protected int serverPort;
+	public static final int NUM_OF_PLAYERS = 2; 
+	
+	protected int portNumber;
+	protected String serverIP;
+	
 	private ServerSocket serverSocket;
 	private ArrayList<Socket> clientSockets;
 	private ArrayList<BufferedReader> inputStreams;
 	private ArrayList<PrintWriter> outputStreams;
-	private int portNumber;
-	private String serverIP;
-	public boolean verbose;
 
+
+	/**
+	 * Constructor of the Server object. Creates client socket, input and output streams. 
+	 * @param portNumber the port number of the server.
+ 	 * @param serverIP   IP address of the server. 
+	 */
 	public Server(int portNumber, String serverIP){
 		clientSockets = new ArrayList<Socket>();
 		inputStreams = new ArrayList<BufferedReader>();
@@ -38,7 +49,9 @@ public class Server {
 		}
 
 	}
-
+	/**
+	 * Listens clients and assigns a thread to start a game when 2 clients connected.
+	 */
 	public void listenAndConnect(){
 
 		Socket clientSocket;
@@ -47,15 +60,15 @@ public class Server {
 		int clientNumberPrevState = -1;
 		while (true) {
 			try {
-				System.out.println("Server is waiting for clients...");
+				System.out.println("[MAIN SERVER]Server is waiting for clients...");
 				clientSocket = serverSocket.accept();
-				System.out.println("A client is connected. Client ID: " + (++clientNumber));
+				System.out.println("[MAIN SERVER] A client is connected. Client ID: " + (++clientNumber));
 				clientSockets.add(clientSocket);
 				outputStreams.add(new PrintWriter(clientSocket.getOutputStream(), true));
 				inputStreams.add(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
 
 				if (clientNumber % 2 == 0 && clientNumberPrevState != clientNumber) {
-					System.out.println(clientNumber + " are connected. A game will start now. Game ID:  " + (++gameID));
+					System.out.println("[MAIN SERVER] " + clientNumber + " are connected. A game will start now. Game ID:  " + (++gameID));
 					startAGame(gameID, clientNumber, clientSockets, inputStreams, outputStreams);
 					clientNumberPrevState = clientNumber;
 				}
@@ -69,10 +82,18 @@ public class Server {
 		}
 
 	}
-
+	
+	/**
+	 * Assigns a new thread for 2 clients. Clients will communicate with that thread while playing game. 
+	 * @param gameID keeps the game number. Initial value is 1. 
+	 * @param clientCounter keeps the number of clients connected. 
+	 * @param clientSockets keeps socket for 2 clients.
+	 * @param inputStreams  keeps input streams for 2 clients.
+	 * @param outputStreams keeps output streams for 2 clients.
+	 */
 	public void startAGame(int gameID, int clientCounter, ArrayList<Socket> clientSockets,
 			ArrayList<BufferedReader> inputStreams, ArrayList<PrintWriter> outputStreams) {
-
+		System.out.println("[MAIN SERVER] Creating a thread for game control... ");
 		int firstClientIndex = clientCounter - 2;
 		int secondClientIndex = clientCounter - 1;
 
@@ -86,7 +107,7 @@ public class Server {
 		inputs.add(inputStreams.get(secondClientIndex));
 		outs.add(outputStreams.get(firstClientIndex));
 		outs.add(outputStreams.get(secondClientIndex));
-
+		System.out.println("[MAIN SERVER] Game Controller thread created. ");
 		GameThread gameThread = new GameThread(gameID, clientCounter, sockets, inputs, outs);
 		gameThread.start();
 	}
