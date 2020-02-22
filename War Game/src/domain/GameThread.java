@@ -191,8 +191,6 @@ public class GameThread extends Thread {
 							System.out.println("[GAME CONTROLLER] Round " + NUMBER_OF_ROUNDS + " has finished.");
 						}
 
-						System.out.println("max rounds " + MAX_NUM_ROUNDS);
-						System.out.println("num rounds: " + NUMBER_OF_ROUNDS);
 
 						if (MAX_NUM_ROUNDS == NUMBER_OF_ROUNDS) {
 							endGame();
