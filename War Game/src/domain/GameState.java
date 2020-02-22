@@ -18,10 +18,13 @@ public class GameState {
 
 	/**
 	 * Constructor of the Game State object. Initializes its fields.
-	 * @param numPlayers number of players in the game
-	 * @param numRounds number of rounds played so far
-	 * @param remainingCards Hash Map that holds {'PlayerName': [List of remaining cards]}
-	 * @param scores Hash Map that holds {'PlayerName': [List of remaining cards]}
+	 * 
+	 * @param numPlayers     number of players in the game
+	 * @param numRounds      number of rounds played so far
+	 * @param remainingCards Hash Map that holds {'PlayerName': [List of remaining
+	 *                       cards]}
+	 * @param scores         Hash Map that holds {'PlayerName': [List of remaining
+	 *                       cards]}
 	 */
 	public GameState(int numPlayers, int numRounds, HashMap<String, ArrayList<String>> remainingCards,
 			HashMap<String, Integer> scores) {
@@ -31,7 +34,7 @@ public class GameState {
 		REMAINING_CARDS = remainingCards;
 		SCORE_OF_PLAYERS = scores;
 	}
-	
-	
-	
+
 }
+
+

@@ -1,9 +1,11 @@
 package app;
+import java.io.FileInputStream;
 /**
  * The executable file that triggers the game. Client, server and follower can be initialized from here. 
  * @author Buğra Sipahioğlu
  */
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Scanner;
 
 import domain.Client;
@@ -19,6 +21,12 @@ public class Application {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
+		
+		Properties prop = new Properties();
+		FileInputStream fileInputStream = new FileInputStream(System.getProperty("user.dir") +  "/src/config.properties");
+		prop.load(fileInputStream);		
+		
+		
 		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the WAR Game. Please choose your mode and enter the number of it. " + "\n"
 				+ "1- MASTER" + "\n" + "2-FOLLOWER" + "\n" + "3-CLIENT");
